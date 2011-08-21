@@ -1,0 +1,38 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+use Net::Twitter::Lite;
+use Data::Dumper;
+
+die "Usage: twitter-oauth consumer_key consumer_secret" unless @ARGV==2;
+my ($consumer_key, $consumer_secret) = @ARGV;
+
+my $nt = Net::Twitter::Lite->new(
+    consumer_key    => $consumer_key,
+    consumer_secret => $consumer_secret,
+);
+
+# The client is not yet authorized: Do it now
+print "Authorize this app at ", $nt->get_authorization_url, " and enter the PIN#\n";
+
+my $pin = <STDIN>; # wait for input
+chomp $pin;
+
+my($access_token, $access_token_secret, $user_id, $screen_name) =
+    $nt->request_access_token(verifier => $pin);
+
+local $Data::Dumper::Terse=1;
+my $src = {
+    access_token => $access_token,
+    access_token_secret => $access_token_secret,
+    user_id => $user_id,
+    screen_name => $screen_name,
+    consumer_key => $consumer_key,
+    consumer_secret => $consumer_secret,
+};
+my $dat = Dumper($src);
+open my $fh, '>', 'config.pl' or die "Cannot open config.pl: $!";
+print {$fh} $dat;
+close $fh;
+print "wrote configuration data on config.pl\n";
+

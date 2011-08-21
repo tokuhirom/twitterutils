@@ -1,0 +1,5 @@
+curl -L http://cpanmin.us/ | perl - Net::Twitter::Lite
+
+run
+
+    % perl twitter-oauth YOUR_CONSUMER_KEY YOUR_CONSUMER_SECRET

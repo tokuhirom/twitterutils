@@ -1,0 +1,21 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+use File::Basename;
+use File::Spec;
+use lib File::Spec->catdir(dirname(__FILE__), 'lib');
+use twitterutils;
+
+use 5.10.0;
+
+my $nt = twitterutils->init;
+
+my $cursor = -1;
+while ($cursor) {
+    my $ret = $nt->followers(+{ cursor => $cursor });
+    for my $user (@{$ret->{users}}) {
+        say "$user->{id} $user->{screen_name}";
+    }
+    $cursor = $ret->{next_cursor};
+}
+

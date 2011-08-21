@@ -1,0 +1,16 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+use File::Basename;
+use File::Spec;
+use lib File::Spec->catdir(dirname(__FILE__), 'lib');
+use twitterutils;
+
+use Data::Dumper;
+
+my $id = shift @ARGV or die "Usage: $0 id\n";
+my $nt = twitterutils->init;
+
+local $Data::Dumper::Terse=1;
+print Dumper( $nt->show_user( +{ id => $id } ) );
+
